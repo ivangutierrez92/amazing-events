@@ -1,0 +1,13 @@
+header > nav a {
+  min-width: 75px;
+}
+
+header .carousel img {
+  height: 300px;
+  object-fit: cover;
+}
+
+.text-shadow-black {
+  text-shadow: 4px 4px 3px black;
+}
+

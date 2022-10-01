@@ -11,7 +11,7 @@ header .carousel img {
   text-shadow: 4px 4px 3px black;
 }
 
-.card img {
+.fit-cover-sm {
   height: 150px;
   object-fit: cover;
 }

@@ -17,6 +17,10 @@ header .carousel img {
   object-fit: cover;
 }
 
+.fit-cover {
+  object-fit: cover;
+}
+
 .bg-gradient-pink {
   background: rgb(217, 3, 104);
   background: linear-gradient(

@@ -1,3 +1,4 @@
+/*Color: #D90368 */
 header > nav a {
   min-width: 75px;
 }
@@ -14,4 +15,41 @@ header .carousel img {
 .fit-cover-sm {
   height: 150px;
   object-fit: cover;
+}
+
+.bg-gradient-pink {
+  background: rgb(217, 3, 104);
+  background: linear-gradient(
+    90deg,
+    rgba(0, 0, 0, 1) 0%,
+    rgba(98, 2, 48, 1) 50%,
+    rgba(217, 3, 104, 1) 100%
+    
+  );
+}
+
+.bg-pink {
+  background-color: rgb(217, 3, 104);
+}
+.btn-pink {
+  background-color: rgb(217, 3, 104);
+  border: none;
+  border-radius: 5px;
+  padding: 8px 12px;
+  color: white;
+}
+.btn-pink:hover {
+  background-color: rgb(184, 3, 90);
+}
+.text-pink {
+  color: rgb(217, 3, 104);
+}
+.nav-link {
+  color: white !important;
+}
+.nav-link:hover {
+  color: black !important;
+}
+.active {
+  color: black !important
 }

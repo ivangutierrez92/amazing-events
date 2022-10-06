@@ -11,7 +11,7 @@ for (let event of events) {
   <div class="card h-100 shadow px-3 pt-3">
     <img
       src="${event.image}"
-      alt=""
+      alt="${event.name}"
       class="card-img-top fit-cover-sm"
     />
     <div class="card-body d-flex flex-column justify-content-between">

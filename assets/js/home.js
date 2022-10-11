@@ -1,6 +1,6 @@
 let events = data.events;
 let container = document.getElementById("card-container");
-let sortedEvents = events.sort((a, b) => new Date(a.date) - new Date(b.date));
+let sortedEvents = [...events].sort((a, b) => new Date(a.date) - new Date(b.date));
 addCardsToContainer(sortedEvents, container);
 
 function addCardsToContainer(events, container) {

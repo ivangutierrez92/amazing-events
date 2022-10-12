@@ -1,9 +1,20 @@
 let events = data.events;
 let container = document.getElementById("card-container");
+let searchInput = document.getElementById("js-search-input");
+let searchButton = document.getElementById("js-search-button")
+
+searchButton.addEventListener('click', () => {
+  let value = searchInput.value;
+  let filteredEvents = events.filter(event => event.name.toLowerCase().includes(value.toLowerCase()));
+  addCardsToContainer(filteredEvents, container);
+});
+
 
 addCardsToContainer(events, container);
 
+
 function addCardsToContainer(events, container) {
+  container.innerHTML = "";
   events.forEach((event) => {
     container.innerHTML += `
     <div class="col">

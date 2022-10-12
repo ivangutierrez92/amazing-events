@@ -1,7 +1,7 @@
 let events = data.events;
 let container = document.getElementById("card-container");
-let sortedEvents = [...events].sort((a, b) => new Date(a.date) - new Date(b.date));
-addCardsToContainer(sortedEvents, container);
+
+addCardsToContainer(events, container);
 
 function addCardsToContainer(events, container) {
   events.forEach((event) => {

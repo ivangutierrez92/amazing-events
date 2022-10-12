@@ -1,17 +1,20 @@
 let events = data.events;
 let container = document.getElementById("card-container");
 let searchInput = document.getElementById("js-search-input");
-let searchButton = document.getElementById("js-search-button")
+let searchButton = document.getElementById("js-search-button");
+let categories = new Set(data.events.map((event) => event.category));
+let checkboxContainer = document.getElementById("js-checkbox-container");
 
-searchButton.addEventListener('click', () => {
+searchButton.addEventListener("click", () => {
   let value = searchInput.value;
-  let filteredEvents = events.filter(event => event.name.toLowerCase().includes(value.toLowerCase()));
+  let filteredEvents = events.filter((event) =>
+    event.name.toLowerCase().includes(value.toLowerCase())
+  );
   addCardsToContainer(filteredEvents, container);
 });
 
-
 addCardsToContainer(events, container);
-
+addCategoriesToContainer(categories, checkboxContainer);
 
 function addCardsToContainer(events, container) {
   container.innerHTML = "";
@@ -35,5 +38,22 @@ function addCardsToContainer(events, container) {
       </div>
     </div>
   `;
+  });
+}
+
+function addCategoriesToContainer(categories, container) {
+  categories.forEach((category) => {
+    container.innerHTML += `
+    <div class="form-check form-check-inline">
+      <label class="form-check-label" for="${category}">${category}</label>
+      <input
+        class="form-check-input"
+        type="checkbox"
+        value="${category}"
+        id="${category}"
+        name="${category}"
+      />
+    </div>
+    `;
   });
 }

@@ -1,14 +1,25 @@
 let events = data.events;
 let currentDate = new Date(data.currentDate);
 let container = document.getElementById("card-container");
+let searchInput = document.getElementById("js-search-input");
+let searchButton = document.getElementById("js-search-button");
 
 const filteredEvents = events
   .filter((event) => new Date(event.date) >= currentDate)
   .sort((a, b) => new Date(a.date) - new Date(b.date));
 
+searchButton.addEventListener("click", () => {
+  let value = searchInput.value;
+  let filteredBySearch = filteredEvents.filter((event) =>
+    event.name.toLowerCase().includes(value.toLowerCase())
+  );
+  addCardsToContainer(filteredBySearch, container);
+});
+
 addCardsToContainer(filteredEvents, container);
 
 function addCardsToContainer(events, container) {
+  container.innerHTML = "";
   events.forEach((event) => {
     container.innerHTML += `
     <div class="col">

@@ -142,7 +142,7 @@
     <!-- MAIN -->
     <main class="flex-grow-1 container py-4">
       <!-- Form -->
-      <form action="" class="row mb-5">
+      <div class="row mb-5">
         <!-- Checkboxs -->
         <div class="col-md-8 d-flex flex-wrap gap-4 mb-3">
           <div class="form-check form-check-inline">
@@ -199,13 +199,13 @@
         <!-- Search -->
         <div class="col">
           <div class="input-group">
-            <input type="text" name="search" class="form-control" />
-            <button class="btn-outline-pink">
+            <input id="js-search-input" type="text" name="search" class="form-control" />
+            <button id="js-search-button" class="btn-outline-pink">
               <i class="bi bi-search"></i>
             </button>
           </div>
         </div>
-      </form>
+      </div>
       <!-- Cards -->
       <div
         class="row row-cols-1 row-cols-md-2 row-cols-lg-3 row-cols-xl-4 g-4 mb-5"

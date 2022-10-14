@@ -97,6 +97,14 @@ searchButton.addEventListener("click", () => {
   filterCards(key, value, "input", cardsContainer);
 });
 
+searchInput.addEventListener("keypress", (event) => {
+  if (event.key === "Enter") {
+    let value = event.target.value;
+    let key = event.target.name;
+    filterCards(key, value, "input", cardsContainer);
+  }
+});
+
 checkboxList = document.querySelectorAll(".js-category-checkbox");
 
 checkboxList.forEach((checkbox) => {

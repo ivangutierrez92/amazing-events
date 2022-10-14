@@ -28,7 +28,7 @@ function cardTemplate(event) {
     </div>
   </div>
 `;
-};
+}
 
 function checkboxTemplate(category) {
   return `
@@ -43,7 +43,11 @@ function checkboxTemplate(category) {
     />
   </div>
   `;
-};
+}
+
+function notFoundTemplate() {
+  return `<div class="w-100"><h2 class="text-center">Events not found. Please adjust your filters</h2><div>`;
+}
 
 function addContentToContainer(list, container, template) {
   container.innerHTML = "";
@@ -71,7 +75,12 @@ function filterCards(key, value, type, container) {
       }
     }
   }
-  addContentToContainer(newEvents, container, cardTemplate);
+  console.log(newEvents);
+  if (newEvents.length) {
+    addContentToContainer(newEvents, container, cardTemplate);
+  } else {
+    container.innerHTML = notFoundTemplate();
+  }
 }
 
 //Adding content when loading page
@@ -94,5 +103,3 @@ checkboxList.forEach((checkbox) => {
     filterCards(key, isChecked, "checkbox", cardsContainer);
   });
 });
-
-

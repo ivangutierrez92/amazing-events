@@ -49,6 +49,10 @@ function checkboxTemplate(category) {
   `;
 }
 
+function notFoundTemplate() {
+  return `<div class="w-100"><h2 class="text-center">Events not found. Please adjust your filters</h2><div>`;
+}
+
 function addContentToContainer(list, container, template) {
   container.innerHTML = "";
   list.forEach((element) => {
@@ -75,7 +79,11 @@ function filterCards(key, value, type, container) {
       }
     }
   }
-  addContentToContainer(newEvents, container, cardTemplate);
+  if (newEvents.length) {
+    addContentToContainer(newEvents, container, cardTemplate);
+  } else {
+    container.innerHTML = notFoundTemplate();
+  }
 }
 
 //Adding content when loading page

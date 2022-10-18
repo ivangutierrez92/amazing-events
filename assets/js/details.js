@@ -1,9 +1,11 @@
+//Variables
 let events = data.events;
 let detailContainer = document.getElementById("js-detail-container");
 let detailId = Number(location.search.slice(4));
 let detailsEvent = events.find((element) => element._id === detailId);
 
-let detailTemplate = (event) => {
+//Functions
+function detailTemplate(event) {
   let quantityPeople = "";
   if (event.estimate) {
     quantityPeople = `<span class="fw-bold">Estimate</span>: ${event.estimate}`;
@@ -58,7 +60,7 @@ let detailTemplate = (event) => {
         </div>
       </div>
   `;
-};
+}
 
 function notFoundTemplate() {
   return `<div class="w-100 mt-5"><h2 class="text-center">Event not found</h2><div>`;
@@ -67,7 +69,7 @@ function notFoundTemplate() {
 function addContentToContainer(event, container, template) {
   container.innerHTML = template(event);
 }
-
+//Adding content when loading page
 if (!detailsEvent) {
   detailContainer.innerHTML = notFoundTemplate();
 } else {

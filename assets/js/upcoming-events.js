@@ -6,7 +6,10 @@ let searchInput = document.getElementById("js-search-input");
 let searchButton = document.getElementById("js-search-button");
 let categories = new Set(data.events.map((event) => event.category));
 let checkboxContainer = document.getElementById("js-checkbox-container");
-let state = {};
+let state = {
+  categories: [],
+  search: "",
+};
 let filteredEvents = events.filter(
   (event) => new Date(event.date) >= currentDate
 );
@@ -60,25 +63,36 @@ function addContentToContainer(list, container, template) {
   });
 }
 
-function filterCards(key, value, type, container) {
-  let newEvents = [...filteredEvents];
-  state[key] = {
-    value: value,
-    type: type,
-  };
-  for (let key in state) {
-    if (state[key].value) {
-      if (state[key].type === "checkbox") {
-        newEvents = newEvents.filter((event) => event.category === key);
-      }
+function filterCards(name, value, type, container) {
+  let newEvents = [];
+  if (type === "checkbox") {
+    if (value) {
+      state.categories.push(name);
+    } else {
+      state.categories = state.categories.filter((category) => {
+        return category !== name;
+      });
+    }
+  } else if (type === "input") {
+    state.search = value;
+  }
 
-      if (state[key].type === "input") {
-        newEvents = newEvents.filter((event) =>
-          event.name.toLowerCase().includes(state[key].value.toLowerCase())
-        );
-      }
+  if (!state.categories.length) {
+    newEvents = [...filteredEvents];
+  } else {
+    for (let category of state.categories) {
+      newEvents = newEvents.concat(
+        filteredEvents.filter((event) => event.category === category)
+      );
     }
   }
+
+  if (state.search) {
+    newEvents = newEvents.filter((value) => {
+      return value.name.toLowerCase().includes(state.search.toLowerCase());
+    });
+  } 
+
   if (newEvents.length) {
     addContentToContainer(newEvents, container, cardTemplate);
   } else {

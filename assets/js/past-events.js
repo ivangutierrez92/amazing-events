@@ -63,18 +63,18 @@ function addContentToContainer(list, container, template) {
   });
 }
 
-function filterCards(name, value, type, container) {
+function filterCards(key, value, type, container) {
   let newEvents = [];
   if (type === "checkbox") {
     if (value) {
-      state.categories.push(name);
+      state.categories.push(key);
     } else {
       state.categories = state.categories.filter((category) => {
-        return category !== name;
+        return category !== key;
       });
     }
   } else if (type === "input") {
-    state.search = value;
+    state[key] = value;
   }
 
   if (!state.categories.length) {
@@ -107,15 +107,15 @@ addContentToContainer(categories, checkboxContainer, checkboxTemplate);
 //Adding events
 searchButton.addEventListener("click", () => {
   let value = searchInput.value;
-  let name = searchInput.name;
-  filterCards(name, value, "input", cardsContainer);
+  let key = searchInput.name;
+  filterCards(key, value, "input", cardsContainer);
 });
 
 searchInput.addEventListener("keypress", (event) => {
   if (event.key === "Enter") {
     let value = event.target.value;
-    let name = event.target.name;
-    filterCards(name, value, "input", cardsContainer);
+    let key = event.target.name;
+    filterCards(key, value, "input", cardsContainer);
   }
 });
 
@@ -123,8 +123,8 @@ checkboxList = document.querySelectorAll(".js-category-checkbox");
 
 checkboxList.forEach((checkbox) => {
   checkbox.addEventListener("change", (event) => {
-    let name = event.target.value;
+    let key = event.target.value;
     let isChecked = event.target.checked;
-    filterCards(name, isChecked, "checkbox", cardsContainer);
+    filterCards(key, isChecked, "checkbox", cardsContainer);
   });
 });

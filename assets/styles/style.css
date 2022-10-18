@@ -34,6 +34,8 @@ header .carousel img {
   background-color: rgb(217, 3, 104);
 }
 
+
+
 .btn-pink {
   background-color: rgb(217, 3, 104);
   border: none;
@@ -41,10 +43,11 @@ header .carousel img {
   padding: 8px 12px;
   color: white;
   transition: 0.1s linear;
+  text-decoration: none;
 }
-
 .btn-pink:hover {
   background-color: rgb(184, 3, 90);
+  color: white;
 }
 
 .btn-outline-pink {

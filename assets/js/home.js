@@ -59,7 +59,7 @@ function addContentToContainer(list, container, template) {
   });
 }
 
-function filterCards(key, value, type, container) {
+function filterCards(key, value, type, container, events) {
   let newEvents = [];
   if (type === "checkbox") {
     if (value) {
@@ -104,14 +104,14 @@ addContentToContainer(categories, checkboxContainer, checkboxTemplate);
 searchButton.addEventListener("click", () => {
   let value = searchInput.value;
   let key = searchInput.name;
-  filterCards(key, value, "input", cardsContainer);
+  filterCards(key, value, "input", cardsContainer, events);
 });
 
 searchInput.addEventListener("keypress", (event) => {
   if (event.key === "Enter") {
     let value = event.target.value;
     let key = event.target.name;
-    filterCards(key, value, "input", cardsContainer);
+    filterCards(key, value, "input", cardsContainer, events);
   }
 });
 
@@ -121,6 +121,6 @@ checkboxList.forEach((checkbox) => {
   checkbox.addEventListener("change", (event) => {
     let key = event.target.value;
     let isChecked = event.target.checked;
-    filterCards(key, isChecked, "checkbox", cardsContainer);
+    filterCards(key, isChecked, "checkbox", cardsContainer, events);
   });
 });

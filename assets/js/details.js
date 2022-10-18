@@ -61,7 +61,7 @@ let detailTemplate = (event) => {
 };
 
 function notFoundTemplate() {
-  return `<div class="w-100 m-auto"><h2 class="text-center">Event not found</h2><div>`;
+  return `<div class="w-100 mt-5"><h2 class="text-center">Event not found</h2><div>`;
 }
 
 function addContentToContainer(event, container, template) {

@@ -43,14 +43,14 @@
             id="navbarSupportedContent"
           >
             <ul class="navbar-nav mb-2 mb-lg-0">
-              <li class="nav-item me-3">
+              <li class="nav-item me-0 me-lg-3">
                 <a
                   class="nav-link btn btn-outline-light fw-semibold border border-2 rounded-0"
                   href="./index.html"
                   >Home</a
                 >
               </li>
-              <li class="nav-item me-3">
+              <li class="nav-item me-0 me-lg-3">
                 <a
                   class="nav-link btn btn-outline-light fw-semibold border border-2 active rounded-0"
                   aria-current="page"
@@ -58,14 +58,14 @@
                   >Upcoming Events</a
                 >
               </li>
-              <li class="nav-item me-3">
+              <li class="nav-item me-0 me-lg-3">
                 <a
                   class="nav-link btn btn-outline-light fw-semibold border border-2 rounded-0"
                   href="./past-events.html"
                   >Past Events</a
                 >
               </li>
-              <li class="nav-item me-3">
+              <li class="nav-item me-0 me-lg-3">
                 <a
                   class="nav-link btn btn-outline-light fw-semibold border border-2 rounded-0"
                   href="./contact.html"
@@ -73,7 +73,7 @@
                 >
               </li>
 
-              <li class="nav-item me-3">
+              <li class="nav-item me-0 me-lg-3">
                 <a
                   class="nav-link btn btn-outline-light fw-semibold border border-2 rounded-0"
                   href="./stats.html"
@@ -142,70 +142,19 @@
     <!-- MAIN -->
     <main class="flex-grow-1 container py-4">
       <!-- Form -->
-      <form action="" class="row mb-5">
+      <div class="row mb-5">
         <!-- Checkboxs -->
-        <div class="col-md-8 d-flex flex-wrap gap-4 mb-3">
-          <div class="form-check form-check-inline">
-            <label class="form-check-label" for="option1">Category </label>
-            <input
-              class="form-check-input"
-              type="checkbox"
-              value="option1"
-              id="option1"
-              name="category"
-            />
-          </div>
-          <div class="form-check form-check-inline">
-            <label class="form-check-label" for="option2">Category </label>
-            <input
-              class="form-check-input"
-              type="checkbox"
-              value="option2"
-              id="option2"
-              name="category"
-            />
-          </div>
-          <div class="form-check form-check-inline">
-            <label class="form-check-label" for="option3">Category </label>
-            <input
-              class="form-check-input"
-              type="checkbox"
-              value="option3"
-              id="option3"
-              name="category"
-            />
-          </div>
-          <div class="form-check form-check-inline">
-            <label class="form-check-label" for="option4">Category </label>
-            <input
-              class="form-check-input"
-              type="checkbox"
-              value="option4"
-              id="option4"
-              name="category"
-            />
-          </div>
-          <div class="form-check form-check-inline">
-            <label class="form-check-label" for="option5">Category </label>
-            <input
-              class="form-check-input"
-              type="checkbox"
-              value="option5"
-              id="option5"
-              name="category"
-            />
-          </div>
-        </div>
+        <div id="js-checkbox-container" class="col-md-8 d-flex flex-wrap gap-1 mb-3"></div>
         <!-- Search -->
         <div class="col">
           <div class="input-group">
-            <input type="text" name="search" class="form-control" />
-            <button class="btn-outline-pink">
+            <input id="js-search-input" type="text" name="search" class="form-control" />
+            <button id="js-search-button" class="btn-outline-pink">
               <i class="bi bi-search"></i>
             </button>
           </div>
         </div>
-      </form>
+      </div>
       <!-- Cards -->
       <div
         class="row row-cols-1 row-cols-md-2 row-cols-lg-3 row-cols-xl-4 g-4 mb-5"

@@ -6,13 +6,6 @@ let detailsEvent = events.find((element) => element._id === detailId);
 
 //Functions
 function detailTemplate(event) {
-  let quantityPeople = "";
-  if (event.estimate) {
-    quantityPeople = `<span class="fw-bold">Estimate</span>: ${event.estimate}`;
-  } else if (event.assistance) {
-    quantityPeople = `<span class="fw-bold">Assistance</span>: ${event.assistance}`;
-  }
-
   return `
   <div class="card my-auto w-75 mx-auto shadow">
         <div class="row g-0">
@@ -50,7 +43,7 @@ function detailTemplate(event) {
                 </div>
                 <div class="col-12 col-md-6">
                   <p class="card-text">
-                    ${quantityPeople}
+                    <span class="fw-bold">${event.estimate ? "Estimate" : "Assistance"}</span>: ${event.estimate || event.assistance}
                   </p>
                 </div>
               </div>

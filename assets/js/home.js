@@ -23,7 +23,7 @@ function cardTemplate(event) {
         <p class="card-text text-center text-truncate">${event.description}</p>
         <div class="d-flex justify-content-between flex-wrap">
           <p class="fw-bold my-auto">Price: $${event.price}</p>
-          <a href="./details.html?id=${event._id}" class="btn-pink">See more</a>
+          <a href="./details.html?id=${event.id}" class="btn-pink">See more</a>
         </div>
       </div>
     </div>

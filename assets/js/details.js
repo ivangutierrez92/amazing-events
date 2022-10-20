@@ -1,8 +1,6 @@
 //Variables
-let events = data.events;
 let detailContainer = document.getElementById("js-detail-container");
-let detailId = Number(location.search.slice(4));
-let detailsEvent = events.find((element) => element._id === detailId);
+let detailId = location.search.slice(4);
 
 //Functions
 function detailTemplate(event) {
@@ -43,11 +41,15 @@ function detailTemplate(event) {
                 </div>
                 <div class="col-12 col-md-6">
                   <p class="card-text">
-                    <span class="fw-bold">${event.estimate ? "Estimate" : "Assistance"}</span>: ${event.estimate || event.assistance}
+                    <span class="fw-bold">${
+                      event.estimate ? "Estimate" : "Assistance"
+                    }</span>: ${event.estimate || event.assistance}
                   </p>
                 </div>
               </div>
-              <p class="card-text"><span class="fw-bold">Price</span>: ${event.price}</p>
+              <p class="card-text"><span class="fw-bold">Price</span>: ${
+                event.price
+              }</p>
             </div>
           </div>
         </div>
@@ -55,16 +57,24 @@ function detailTemplate(event) {
   `;
 }
 
-function notFoundTemplate() {
+function ErrorTemplate() {
   return `<div class="w-100 mt-5"><h2 class="text-center">Event not found</h2><div>`;
 }
 
 function addContentToContainer(event, container, template) {
   container.innerHTML = template(event);
 }
-//Adding content when loading page
-if (!detailsEvent) {
-  detailContainer.innerHTML = notFoundTemplate();
-} else {
-  addContentToContainer(detailsEvent, detailContainer, detailTemplate);
+
+async function getEvent(id) {
+  try {
+    let res = await fetch(`https://mind-hub.up.railway.app/amazing/${id}`);
+    let data = await res.json();
+    let event = data.event;
+    addContentToContainer(event, detailContainer, detailTemplate);
+  } catch (error){
+    console.log(error);
+    detailContainer.innerHTML = ErrorTemplate();
+  }
 }
+
+getEvent(detailId);

@@ -63,35 +63,48 @@ function addContentToContainer(list, container, template) {
   });
 }
 
-function filterCards(key, value, type, container, events) {
-  let newEvents = [];
-  if (type === "checkbox") {
-    if (value) {
-      state.categories.push(key);
+function addTargetToState(target) {
+  if (target.type === "checkbox") {
+    if (target.checked) {
+      state.categories.push(target.value);
     } else {
       state.categories = state.categories.filter((category) => {
-        return category !== key;
+        return category !== target.value;
       });
     }
-  } else if (type === "input") {
-    state[key] = value;
+  } else if (target.type === "text") {
+    state[target.name] = target.value;
   }
+}
 
+function filterByCategories(list) {
+  let newList = [];
   if (!state.categories.length) {
-    newEvents = [...events];
+    newList = [...list];
   } else {
     state.categories.forEach((category) => {
-      newEvents = newEvents.concat(
-        events.filter((event) => event.category === category)
+      newList = newList.concat(
+        list.filter((event) => event.category === category)
       );
     });
   }
+  return newList;
+}
 
+function filterBySearch(list) {
+  let newList = [...list];
   if (state.search) {
-    newEvents = newEvents.filter((value) => {
+    newList = newList.filter((value) => {
       return value.name.toLowerCase().includes(state.search.toLowerCase());
     });
   }
+  return newList;
+}
+
+function filterCards(target, container, events) {
+  addTargetToState(target);
+  let newEvents = filterByCategories(events);
+  newEvents = filterBySearch(newEvents);
 
   if (newEvents.length) {
     addContentToContainer(newEvents, container, cardTemplate);
@@ -106,16 +119,12 @@ addContentToContainer(categories, checkboxContainer, checkboxTemplate);
 
 //Adding events
 searchButton.addEventListener("click", () => {
-  let value = searchInput.value;
-  let key = searchInput.name;
-  filterCards(key, value, "input", cardsContainer, filteredEvents);
+  filterCards(searchInput, cardsContainer, filteredEvents);
 });
 
 searchInput.addEventListener("keypress", (event) => {
   if (event.key === "Enter") {
-    let value = event.target.value;
-    let key = event.target.name;
-    filterCards(key, value, "input", cardsContainer, filteredEvents);
+    filterCards(event.target, cardsContainer, filteredEvents);
   }
 });
 
@@ -123,8 +132,6 @@ checkboxList = document.querySelectorAll(".js-category-checkbox");
 
 checkboxList.forEach((checkbox) => {
   checkbox.addEventListener("change", (event) => {
-    let key = event.target.value;
-    let isChecked = event.target.checked;
-    filterCards(key, isChecked, "checkbox", cardsContainer, filteredEvents);
+    filterCards(event.target, cardsContainer, filteredEvents);
   });
 });

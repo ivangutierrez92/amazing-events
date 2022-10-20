@@ -1,18 +1,13 @@
 //Variables
-let events = data.events;
-let currentDate = new Date(data.currentDate);
+
 let cardsContainer = document.getElementById("card-container");
 let searchInput = document.getElementById("js-search-input");
 let searchButton = document.getElementById("js-search-button");
-let categories = new Set(data.events.map((event) => event.category));
 let checkboxContainer = document.getElementById("js-checkbox-container");
 let state = {
   categories: [],
   search: "",
 };
-let filteredEvents = events.filter(
-  (event) => new Date(event.date) < currentDate
-);
 
 //Functions
 function cardTemplate(event) {
@@ -113,25 +108,40 @@ function filterCards(target, container, events) {
   }
 }
 
-//Adding content when loading page
-addContentToContainer(filteredEvents, cardsContainer, cardTemplate);
-addContentToContainer(categories, checkboxContainer, checkboxTemplate);
+async function getEvents() {
+  //Variables
+  let res = await fetch("https://mind-hub.up.railway.app/amazing");
+  let data = await res.json();
+  let events = data.events;
+  let categories = new Set(data.events.map((event) => event.category));
+  let currentDate = new Date(data.date);
 
-//Adding events
-searchButton.addEventListener("click", () => {
-  filterCards(searchInput, cardsContainer, filteredEvents);
-});
+  let filteredEvents = events.filter(
+    (event) => new Date(event.date) < currentDate
+  );
 
-searchInput.addEventListener("keypress", (event) => {
-  if (event.key === "Enter") {
-    filterCards(event.target, cardsContainer, filteredEvents);
-  }
-});
+  //Adding content when loading page
+  addContentToContainer(filteredEvents, cardsContainer, cardTemplate);
+  addContentToContainer(categories, checkboxContainer, checkboxTemplate);
 
-checkboxList = document.querySelectorAll(".js-category-checkbox");
-
-checkboxList.forEach((checkbox) => {
-  checkbox.addEventListener("change", (event) => {
-    filterCards(event.target, cardsContainer, filteredEvents);
+  //Adding events
+  searchButton.addEventListener("click", () => {
+    filterCards(searchInput, cardsContainer, filteredEvents);
   });
-});
+
+  searchInput.addEventListener("keypress", (event) => {
+    if (event.key === "Enter") {
+      filterCards(event.target, cardsContainer, filteredEvents);
+    }
+  });
+
+  checkboxList = document.querySelectorAll(".js-category-checkbox");
+
+  checkboxList.forEach((checkbox) => {
+    checkbox.addEventListener("change", (event) => {
+      filterCards(event.target, cardsContainer, filteredEvents);
+    });
+  });
+}
+
+getEvents();

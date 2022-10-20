@@ -108,34 +108,40 @@ function filterCards(target, container, events) {
 }
 
 async function getEvents() {
-  //Variables
-  let res = await fetch("https://mind-hub.up.railway.app/amazing");
-  let data = await res.json();
-  let events = data.events;
-  let categories = new Set(data.events.map((event) => event.category));
+  try {
+    //Variables
+    let res = await fetch("https://mind-hub.up.railway.app/amazing");
+    let data = await res.json();
+    let events = data.events;
+    let categories = new Set(data.events.map((event) => event.category));
 
-  //Adding content when loading page
-  addContentToContainer(events, cardsContainer, cardTemplate);
-  addContentToContainer(categories, checkboxContainer, checkboxTemplate);
+    //Adding content when loading page
+    addContentToContainer(events, cardsContainer, cardTemplate);
+    addContentToContainer(categories, checkboxContainer, checkboxTemplate);
 
-  //Adding events
-  searchButton.addEventListener("click", () => {
-    filterCards(searchInput, cardsContainer, events);
-  });
-
-  searchInput.addEventListener("keypress", (event) => {
-    if (event.key === "Enter") {
-      filterCards(event.target, cardsContainer, events);
-    }
-  });
-
-  checkboxList = document.querySelectorAll(".js-category-checkbox");
-
-  checkboxList.forEach((checkbox) => {
-    checkbox.addEventListener("change", (event) => {
-      filterCards(event.target, cardsContainer, events);
+    //Adding events
+    searchButton.addEventListener("click", () => {
+      filterCards(searchInput, cardsContainer, events);
     });
-  });
+
+    searchInput.addEventListener("keypress", (event) => {
+      if (event.key === "Enter") {
+        filterCards(event.target, cardsContainer, events);
+      }
+    });
+
+    checkboxList = document.querySelectorAll(".js-category-checkbox");
+
+    checkboxList.forEach((checkbox) => {
+      checkbox.addEventListener("change", (event) => {
+        filterCards(event.target, cardsContainer, events);
+      });
+    });
+  } catch {
+    container.innerHTML(
+      `<div class="w-100"><h2 class="text-center">An error ocurred, and couldn't show the cards. Please, try again later.</h2><div>`
+    );
+  }
 }
 
 getEvents();

@@ -1,111 +1,104 @@
-let eventsStatistics = document.getElementById("js-events-statistics");
-let upcomingEventsStatistics = document.getElementById(
-  "js-upcoming-events-statistics"
-);
-let pastEventsStatistics = document.getElementById("js-past-events-statistics");
+let eventsStatisticsContainer = document.getElementById("js-events-statistics");
+let upcomingEventsStatisticsContainer = document.getElementById("js-upcoming-events-statistics");
+let pastEventsStatisticsContainer = document.getElementById("js-past-events-statistics");
 
-async function getData() {
-  let pastEvents = await fetch(
-    "https://mind-hub.up.railway.app/amazing?time=past"
-  );
-  pastEvents = await pastEvents.json();
-  pastEvents = pastEvents.events;
+async function getEvents(query) {
+  events = await fetch(`https://mind-hub.up.railway.app/amazing?${query}`);
+  events = await events.json();
+  return events.events;
+}
 
-  let upcomingEvents = await fetch(
-    "https://mind-hub.up.railway.app/amazing?time=upcoming"
-  );
-  upcomingEvents = await upcomingEvents.json();
-  upcomingEvents = upcomingEvents.events;
+function sortDescByAttribute(list, attribute) {
+  return [...list].sort((a, b) => b[attribute] - a[attribute]);
+}
 
-  let eventsByAttendacePercentage = pastEvents
-    .map((event) => {
-      let attendancePercentage = (event.assistance / event.capacity) * 100;
-      return {
-        attendancePercentage,
-        capacity: event.capacity,
-        name: event.name,
+function statisticsByCategory(list) {
+  return list.reduce((a, b) => {
+    let key = a[b.category];
+    let revenue = b.price * attendance;
+    let attendance = b.assistance || b.estimate;
+    let capacity = b.capacity;
+
+    if (key) {
+      key.revenue += revenue;
+      key.attendance += attendance;
+      key.capacity += capacity;
+    } else {
+      a[b.category] = {
+        revenue,
+        attendance,
+        capacity,
       };
-    })
-    .sort((a, b) => a.attendancePercentage - b.attendancePercentage);
+    }
 
-  let lowestAttendanceEvent = eventsByAttendacePercentage[0].name;
-  let highestAttendanceEvent =
-    eventsByAttendacePercentage[eventsByAttendacePercentage.length - 1].name;
-  let largerCapacityEvent = eventsByAttendacePercentage.sort(
-    (a, b) => b.capacity - a.capacity
-  )[0].name;
+    return a;
+  }, {});
+}
 
-  eventsStatistics.innerHTML += `
+function getPercentage(part, total) {
+  return (part / total) * 100;
+}
+
+function eventsStatisticsTemplate(statistics) {
+  return `
   <tr>
-    <td>${highestAttendanceEvent}</td>
-    <td>${lowestAttendanceEvent}</td>
-    <td>${largerCapacityEvent}</td>
+    <td>${statistics.highestAttendance}</td>
+    <td>${statistics.lowestAttendance}</td>
+    <td>${statistics.largerCapacity}</td>
   </tr>
 `;
+}
 
-  let pastStatisticsByCategories = pastEvents.reduce((a, b) => {
-    let category = b.category;
-    let revenue = b.price * b.assistance;
-
-    if (a[category]) {
-      a[category].revenue += revenue;
-      a[category].assistanceSum += b.assistance;
-      a[category].capacitySum += b.capacity;
-    } else {
-      a[category] = {
-        revenue,
-        assistanceSum: b.assistance,
-        capacitySum: b.capacity,
-      };
-    }
-    return a;
-  }, {});
-
-  Object.keys(pastStatisticsByCategories).forEach((category) => {
-    pastEventsStatistics.innerHTML += `
+function categoryStatisticsTemplate(category, statistics) {
+  return `
       <tr>
         <td>${category}</td>
-        <td>$${pastStatisticsByCategories[category].revenue}</td>
-        <td>${Math.round(
-          (pastStatisticsByCategories[category].assistanceSum /
-            pastStatisticsByCategories[category].capacitySum) *
-            100
-        )}%</td>
+        <td>$${statistics.revenue}</td>
+        <td>${Math.round(getPercentage(statistics.attendance, statistics.capacity))}%</td>
       </tr>
     `;
-  });
+}
 
-  let upcomingStatisticsByCategories = upcomingEvents.reduce((a, b) => {
-    let category = b.category;
-    let revenue = b.price * b.estimate;
+function mapEventStatistics(event) {
+  let attendance = getPercentage(event.assistance, event.capacity);
+  return {
+    attendance,
+    capacity: event.capacity,
+    name: event.name,
+  };
+}
 
-    if (a[category]) {
-      a[category].revenue += revenue;
-      a[category].estimateSum += b.estimate;
-      a[category].capacitySum += b.capacity;
-    } else {
-      a[category] = {
-        revenue,
-        estimateSum: b.estimate,
-        capacitySum: b.capacity,
-      };
-    }
-    return a;
-  }, {});
+function processEventsStatistics(events, container) {
+  let statistics = events.map(mapEventStatistics);
 
-  Object.keys(upcomingStatisticsByCategories).forEach((category) => {
-    upcomingEventsStatistics.innerHTML += `
-      <tr>
-        <td>${category}</td>
-        <td>$${upcomingStatisticsByCategories[category].revenue}</td>
-        <td>${Math.round(
-          (upcomingStatisticsByCategories[category].estimateSum /
-            upcomingStatisticsByCategories[category].capacitySum) *
-            100
-        )}%</td>
-      </tr>
-    `;
+  let sortedDescByAttendance = sortDescByAttribute(statistics, "attendance");
+  let highestAttendance = sortedDescByAttendance[0].name;
+  let lowestAttendance = sortedDescByAttendance[sortedDescByAttendance.length - 1].name;
+  let largerCapacity = sortDescByAttribute(statistics, "capacity")[0].name;
+
+  container.innerHTML += eventsStatisticsTemplate({
+    highestAttendance,
+    lowestAttendance,
+    largerCapacity,
   });
 }
 
-getData();
+function processCategoriesStatistics(events, container) {
+  let statistics = statisticsByCategory(events);
+
+  Object.entries(statistics).forEach(entry => {
+    let [category, statistics] = entry;
+    container.innerHTML += categoryStatisticsTemplate(category, statistics);
+  });
+}
+
+async function startProgram() {
+  let pastEvents = await getEvents("time=past");
+  let upcomingEvents = await getEvents("time=upcoming");
+
+  processEventsStatistics(pastEvents, eventsStatisticsContainer);
+  processCategoriesStatistics(upcomingEvents, upcomingEventsStatisticsContainer);
+  processCategoriesStatistics(pastEvents, pastEventsStatisticsContainer);
+}
+
+startProgram();

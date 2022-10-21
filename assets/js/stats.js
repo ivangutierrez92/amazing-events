@@ -101,8 +101,7 @@ async function startProgram() {
     processEventsStatistics(pastEvents, eventsStatisticsContainer);
     processCategoriesStatistics(upcomingEvents, upcomingEventsStatisticsContainer);
     processCategoriesStatistics(pastEvents, pastEventsStatisticsContainer);
-  } catch(error) {
-    console.log(error);
+  } catch (error) {
     mainContainer.innerHTML = `
     <div class="w-100"><h2 class="text-center">An error ocurred, and couldn't show the stats. Please, try again later.</h2><div>
     `;

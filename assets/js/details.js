@@ -17,7 +17,7 @@ function detailTemplate(event) {
           <div class="col-lg-8">
             <div class="card-body">
               <h5 class="card-title">${event.name}</h5>
-              <p class="card-text text-muted">${event.date}</p>
+              <p class="card-text text-muted">${event.date.slice(0, 10).split("-").reverse().join("-")}</p>
               <p class="card-text">
                 ${event.description}
               </p>

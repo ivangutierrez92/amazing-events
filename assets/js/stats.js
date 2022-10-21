@@ -8,8 +8,21 @@ async function getEvents(query) {
   return events.events;
 }
 
+function getPercentage(part, total) {
+  return (part / total) * 100;
+}
+
 function sortDescByAttribute(list, attribute) {
   return [...list].sort((a, b) => b[attribute] - a[attribute]);
+}
+
+function mapEventStatistics(event) {
+  let attendance = getPercentage(event.assistance, event.capacity);
+  return {
+    attendance,
+    capacity: event.capacity,
+    name: event.name,
+  };
 }
 
 function statisticsByCategory(list) {
@@ -35,10 +48,6 @@ function statisticsByCategory(list) {
   }, {});
 }
 
-function getPercentage(part, total) {
-  return (part / total) * 100;
-}
-
 function eventsStatisticsTemplate(statistics) {
   return `
   <tr>
@@ -57,15 +66,6 @@ function categoryStatisticsTemplate(category, statistics) {
         <td>${Math.round(getPercentage(statistics.attendance, statistics.capacity))}%</td>
       </tr>
     `;
-}
-
-function mapEventStatistics(event) {
-  let attendance = getPercentage(event.assistance, event.capacity);
-  return {
-    attendance,
-    capacity: event.capacity,
-    name: event.name,
-  };
 }
 
 function processEventsStatistics(events, container) {

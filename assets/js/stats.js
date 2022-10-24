@@ -103,7 +103,7 @@ function eventsStatisticsTemplate(statistics) {
 function categoryStatisticsTemplate(category, statistics) {
   return `
       <tr>
-        <td>${category}</td>
+        <th scope="row">${category}</td>
         <td>$${statistics.revenue}</td>
         <td>${Math.round(getPercentage(statistics.attendance, statistics.capacity))}%</td>
       </tr>

@@ -1,18 +1,8 @@
 //Variables
-let events = data.events;
 let detailContainer = document.getElementById("js-detail-container");
-let detailId = Number(location.search.slice(4));
-let detailsEvent = events.find((element) => element._id === detailId);
-
+let detailId = new URLSearchParams(location.search).get("id");
 //Functions
 function detailTemplate(event) {
-  let quantityPeople = "";
-  if (event.estimate) {
-    quantityPeople = `<span class="fw-bold">Estimate</span>: ${event.estimate}`;
-  } else if (event.assistance) {
-    quantityPeople = `<span class="fw-bold">Assistance</span>: ${event.assistance}`;
-  }
-
   return `
   <div class="card my-auto w-75 mx-auto shadow">
         <div class="row g-0">
@@ -26,7 +16,7 @@ function detailTemplate(event) {
           <div class="col-lg-8">
             <div class="card-body">
               <h5 class="card-title">${event.name}</h5>
-              <p class="card-text text-muted">${event.date}</p>
+              <p class="card-text text-muted">${event.date.slice(0, 10).split("-").reverse().join("-")}</p>
               <p class="card-text">
                 ${event.description}
               </p>
@@ -50,7 +40,9 @@ function detailTemplate(event) {
                 </div>
                 <div class="col-12 col-md-6">
                   <p class="card-text">
-                    ${quantityPeople}
+                    <span class="fw-bold">${event.estimate ? "Estimate" : "Assistance"}</span>: ${
+    event.estimate || event.assistance
+  }
                   </p>
                 </div>
               </div>
@@ -62,16 +54,25 @@ function detailTemplate(event) {
   `;
 }
 
-function notFoundTemplate() {
+function ErrorTemplate() {
   return `<div class="w-100 mt-5"><h2 class="text-center">Event not found</h2><div>`;
 }
 
 function addContentToContainer(event, container, template) {
   container.innerHTML = template(event);
 }
-//Adding content when loading page
-if (!detailsEvent) {
-  detailContainer.innerHTML = notFoundTemplate();
-} else {
-  addContentToContainer(detailsEvent, detailContainer, detailTemplate);
+
+async function getEvent(id) {
+  try {
+    let res = await fetch(`https://mind-hub.up.railway.app/amazing/${id}`);
+    let data = await res.json();
+    let event = data.event;
+    document.title = `Details ${event.name}`;
+    addContentToContainer(event, detailContainer, detailTemplate);
+  } catch (error) {
+    document.title = "404 Not Found";
+    detailContainer.innerHTML = ErrorTemplate();
+  }
 }
+
+getEvent(detailId);

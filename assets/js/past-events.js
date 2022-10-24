@@ -1,20 +1,58 @@
 //Variables
-let events = data.events;
-let currentDate = new Date(data.currentDate);
+
 let cardsContainer = document.getElementById("card-container");
 let searchInput = document.getElementById("js-search-input");
 let searchButton = document.getElementById("js-search-button");
-let categories = new Set(data.events.map((event) => event.category));
 let checkboxContainer = document.getElementById("js-checkbox-container");
 let state = {
   categories: [],
   search: "",
 };
-let filteredEvents = events.filter(
-  (event) => new Date(event.date) < currentDate
-);
 
 //Functions
+
+async function startProgram() {
+  try {
+    //Variables
+    let res = await fetch("https://mind-hub.up.railway.app/amazing?time=past");
+    let data = await res.json();
+    let pastEvents = data.events;
+    let categories = new Set(pastEvents.map(event => event.category));
+
+    //Adding content when loading page
+    addContentToContainer(pastEvents, cardsContainer, cardTemplate);
+    addContentToContainer(categories, checkboxContainer, checkboxTemplate);
+
+    //Adding events
+    searchButton.addEventListener("click", () => {
+      filterCards(searchInput, cardsContainer, pastEvents);
+    });
+
+    searchInput.addEventListener("keypress", event => {
+      if (event.key === "Enter") {
+        filterCards(event.target, cardsContainer, pastEvents);
+      }
+    });
+
+    checkboxList = document.querySelectorAll(".js-category-checkbox");
+
+    checkboxList.forEach(checkbox => {
+      checkbox.addEventListener("change", event => {
+        filterCards(event.target, cardsContainer, pastEvents);
+      });
+    });
+  } catch {
+    cardsContainer.innerHTML = `<div class="w-100"><h2 class="text-center">An error ocurred, and couldn't show the cards. Please, try again later.</h2><div>`;
+  }
+}
+
+function addContentToContainer(list, container, template) {
+  container.innerHTML = "";
+  list.forEach(element => {
+    container.innerHTML += template(element);
+  });
+}
+
 function cardTemplate(event) {
   return `
   <div class="col">
@@ -29,7 +67,7 @@ function cardTemplate(event) {
         <p class="card-text text-center text-truncate">${event.description}</p>
         <div class="d-flex justify-content-between flex-wrap">
           <p class="fw-bold my-auto">Price: $${event.price}</p>
-          <a href="./details.html?id=${event._id}" class="btn-pink">See more</a>
+          <a href="./details.html?id=${event.id}" class="btn-pink">See more</a>
         </div>
       </div>
     </div>
@@ -56,42 +94,10 @@ function notFoundTemplate() {
   return `<div class="w-100"><h2 class="text-center">Events not found. Please adjust your filters</h2><div>`;
 }
 
-function addContentToContainer(list, container, template) {
-  container.innerHTML = "";
-  list.forEach((element) => {
-    container.innerHTML += template(element);
-  });
-}
-
-function filterCards(key, value, type, container, events) {
-  let newEvents = [];
-  if (type === "checkbox") {
-    if (value) {
-      state.categories.push(key);
-    } else {
-      state.categories = state.categories.filter((category) => {
-        return category !== key;
-      });
-    }
-  } else if (type === "input") {
-    state[key] = value;
-  }
-
-  if (!state.categories.length) {
-    newEvents = [...events];
-  } else {
-    state.categories.forEach((category) => {
-      newEvents = newEvents.concat(
-        events.filter((event) => event.category === category)
-      );
-    });
-  }
-
-  if (state.search) {
-    newEvents = newEvents.filter((value) => {
-      return value.name.toLowerCase().includes(state.search.toLowerCase());
-    });
-  }
+function filterCards(target, container, events) {
+  changeState(target);
+  let newEvents = filterByCategories(events);
+  newEvents = filterBySearch(newEvents);
 
   if (newEvents.length) {
     addContentToContainer(newEvents, container, cardTemplate);
@@ -100,31 +106,40 @@ function filterCards(key, value, type, container, events) {
   }
 }
 
-//Adding content when loading page
-addContentToContainer(filteredEvents, cardsContainer, cardTemplate);
-addContentToContainer(categories, checkboxContainer, checkboxTemplate);
-
-//Adding events
-searchButton.addEventListener("click", () => {
-  let value = searchInput.value;
-  let key = searchInput.name;
-  filterCards(key, value, "input", cardsContainer, filteredEvents);
-});
-
-searchInput.addEventListener("keypress", (event) => {
-  if (event.key === "Enter") {
-    let value = event.target.value;
-    let key = event.target.name;
-    filterCards(key, value, "input", cardsContainer, filteredEvents);
+function changeState(target) {
+  if (target.type === "checkbox") {
+    if (target.checked) {
+      state.categories.push(target.value);
+    } else {
+      state.categories = state.categories.filter(category => {
+        return category !== target.value;
+      });
+    }
+  } else if (target.type === "text") {
+    state[target.name] = target.value;
   }
-});
+}
 
-checkboxList = document.querySelectorAll(".js-category-checkbox");
+function filterByCategories(list) {
+  let newList = [];
+  if (!state.categories.length) {
+    newList = [...list];
+  } else {
+    state.categories.forEach(category => {
+      newList = newList.concat(list.filter(event => event.category === category));
+    });
+  }
+  return newList;
+}
 
-checkboxList.forEach((checkbox) => {
-  checkbox.addEventListener("change", (event) => {
-    let key = event.target.value;
-    let isChecked = event.target.checked;
-    filterCards(key, isChecked, "checkbox", cardsContainer, filteredEvents);
-  });
-});
+function filterBySearch(list) {
+  let newList = [...list];
+  if (state.search) {
+    newList = newList.filter(value => {
+      return value.name.toLowerCase().includes(state.search.toLowerCase());
+    });
+  }
+  return newList;
+}
+
+startProgram();

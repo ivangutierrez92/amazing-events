@@ -17,16 +17,18 @@ function sortDescByAttribute(list, attribute) {
   return [...list].sort((a, b) => b[attribute] - a[attribute]);
 }
 
-function mapEventStatistics(event) {
-  let attendance = getPercentage(event.assistance, event.capacity);
-  return {
-    attendance,
-    capacity: event.capacity,
-    name: event.name,
-  };
+function getEventsStatistics(events) {
+  return events.map(event => {
+    let attendance = getPercentage(event.assistance, event.capacity);
+    return {
+      attendance,
+      capacity: event.capacity,
+      name: event.name,
+    };
+  });
 }
 
-function statisticsByCategory(list) {
+function getStatisticsByCategory(list) {
   return list.reduce((a, b) => {
     let key = a[b.category];
     let attendance = b.assistance || b.estimate;
@@ -70,7 +72,7 @@ function categoryStatisticsTemplate(category, statistics) {
 }
 
 function processEventsStatistics(events, container) {
-  let statistics = events.map(mapEventStatistics);
+  let statistics = getEventsStatistics(events);
 
   let sortedDescByAttendance = sortDescByAttribute(statistics, "attendance");
   let highestAttendance = sortedDescByAttendance[0].name;
@@ -85,7 +87,7 @@ function processEventsStatistics(events, container) {
 }
 
 function processCategoriesStatistics(events, container) {
-  let statistics = statisticsByCategory(events);
+  let statistics = getStatisticsByCategory(events);
 
   Object.entries(statistics).forEach(entry => {
     let [category, statistics] = entry;

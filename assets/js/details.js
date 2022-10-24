@@ -67,9 +67,10 @@ async function getEvent(id) {
     let res = await fetch(`https://mind-hub.up.railway.app/amazing/${id}`);
     let data = await res.json();
     let event = data.event;
+    document.title = `Details ${event.name}`;
     addContentToContainer(event, detailContainer, detailTemplate);
   } catch (error) {
-    console.log(error);
+    document.title = "404 Not Found";
     detailContainer.innerHTML = ErrorTemplate();
   }
 }

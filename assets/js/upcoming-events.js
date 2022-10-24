@@ -40,9 +40,7 @@ async function startProgram() {
       });
     });
   } catch {
-    container.innerHTML(
-      `<div class="w-100"><h2 class="text-center">An error ocurred, and couldn't show the cards. Please, try again later.</h2><div>`
-    );
+    cardsContainer.innerHTML = `<div class="w-100"><h2 class="text-center">An error ocurred, and couldn't show the cards. Please, try again later.</h2><div>`;
   }
 }
 

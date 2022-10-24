@@ -1,7 +1,6 @@
 //Variables
 let detailContainer = document.getElementById("js-detail-container");
-let detailId = location.search.slice(4);
-
+let detailId = new URLSearchParams(location.search).get("id");
 //Functions
 function detailTemplate(event) {
   return `
@@ -41,15 +40,13 @@ function detailTemplate(event) {
                 </div>
                 <div class="col-12 col-md-6">
                   <p class="card-text">
-                    <span class="fw-bold">${
-                      event.estimate ? "Estimate" : "Assistance"
-                    }</span>: ${event.estimate || event.assistance}
+                    <span class="fw-bold">${event.estimate ? "Estimate" : "Assistance"}</span>: ${
+    event.estimate || event.assistance
+  }
                   </p>
                 </div>
               </div>
-              <p class="card-text"><span class="fw-bold">Price</span>: ${
-                event.price
-              }</p>
+              <p class="card-text"><span class="fw-bold">Price</span>: ${event.price}</p>
             </div>
           </div>
         </div>
@@ -71,7 +68,7 @@ async function getEvent(id) {
     let data = await res.json();
     let event = data.event;
     addContentToContainer(event, detailContainer, detailTemplate);
-  } catch (error){
+  } catch (error) {
     console.log(error);
     detailContainer.innerHTML = ErrorTemplate();
   }

@@ -53,7 +53,17 @@ function getPercentage(part, total) {
 }
 
 function sortDescByAttribute(list, attribute) {
-  return [...list].sort((a, b) => b[attribute] - a[attribute]);
+  return list
+    .filter(event => event[attribute])
+    .sort((a, b) => {
+      if (b[attribute] < a[attribute]) {
+        return -1;
+      } else if (b[attribute] > a[attribute]) {
+        return 1;
+      } else {
+        return 0;
+      }
+    });
 }
 
 function getEventsStatistics(events) {
